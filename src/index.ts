@@ -14,7 +14,9 @@ app.post("/", async (req, res) => {
   const json = req.body;
   const mailchain = Mailchain.fromSecretRecoveryPhrase(secretRecoveryPhrase);
   const user = await mailchain.user();
-  db.insert(json);
+  db.insert(json).then(() => {
+    console.log("ok");
+  });
   const r = await mailchain.sendMail({
     from: user.address,
     to: [`vrcclinic@mailchain.com`],
