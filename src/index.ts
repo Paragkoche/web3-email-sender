@@ -1,9 +1,12 @@
 import express from "express";
 import { Mailchain } from "@mailchain/sdk";
+import { Deta } from "deta";
 import cors from "cors";
 const app = express();
 app.use(cors());
 app.use(express.json());
+const deta = Deta("c0iaxswh_irtw59FYgbftgS6Q5DTWLHZj9YVZJ6dM");
+const db = deta.Base("mama-db");
 const secretRecoveryPhrase =
   "catalog useless rifle have jelly season unlock alert blood sound cause state cousin dawn they shiver pattern actress spray climb know spike cat kid"; // 25 word mnemonicPhrase
 app.get("/text", (r, q) => q.send("ok"));
@@ -11,6 +14,7 @@ app.post("/", async (req, res) => {
   const json = req.body;
   const mailchain = Mailchain.fromSecretRecoveryPhrase(secretRecoveryPhrase);
   const user = await mailchain.user();
+  db.insert(json);
   const r = await mailchain.sendMail({
     from: user.address,
     to: [`vrcclinic@mailchain.com`],
